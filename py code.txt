@@ -1,0 +1,61 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+
+# Read input and output data from Excel files
+input_df = pd.read_excel('input data.xlsx', engine='openpyxl')
+output_df = pd.read_excel('output data.xlsx', engine='openpyxl')
+
+# Convert DataFrames to numpy arrays
+X = input_df.values
+y = output_df.values
+
+# Normalize input and output data
+scaler_X = StandardScaler()
+scaler_y = StandardScaler()
+X_scaled = scaler_X.fit_transform(X)
+y_scaled = scaler_y.fit_transform(y)
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_scaled, test_size=0.2, random_state=42)
+
+# Build the deep neural network model
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    Dense(32, activation='relu'),
+    Dense(16, activation='relu'),
+    Dense(y_train.shape[1])  # No activation function for regression
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mse')
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=70, batch_size=32, validation_split=0.2)
+
+# Evaluate the model on test data
+loss = model.evaluate(X_test, y_test)
+print("Test Loss:", loss)
+
+# Plot training history
+plt.figure(figsize=(12, 6))
+
+# Plot training & validation loss
+plt.subplot(1, 2, 1)
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Model Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+
+# Plot any other relevant factors (e.g., accuracy)
+# For regression tasks, accuracy may not be applicable, but you can plot other metrics if needed.
+
+plt.show()
