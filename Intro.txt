@@ -10,3 +10,6 @@ achieve more precise and effective energy efficiency measures. By continuously
 learning from data and adapting to changing conditions, ML algorithms contribute to 
 significant cost savings, reduced environmental impact, and improved overall 
 operational efficiency.
+
+
+Read the PPT "Final External Presentation 1" for getting the total knowledge about the project.
